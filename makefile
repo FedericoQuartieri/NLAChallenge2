@@ -2,8 +2,8 @@ FLAGS = -I ${mkEigenInc} # -I ${mkLisInc} -L${mkLisLib} -llis
 GCC = g++
 MTX_ARGS = a2.mtx w.mtx sol.txt hist.txt
 
-all:
-	@echo "Usage: make <sourceName>[.exe | .cpp]"
+all: rerun
+	@touch makefile
 
 execlean:
 	@rm -f **.exe
