@@ -181,13 +181,19 @@ int main(){
 
     //Here starts task 4
     cout << "---------TASK4---------" << endl;
-    for(int shifting=0;shifting<16;shifting+=2)
+    for(int shifting=15000000;shifting<60000000;shifting+=2500000){//the shift is valuable(it accellerates the process) when it is >15000000 and <60000000
+        string command = ("mpirun -n 4 ./lis-2.1.6/test/etest1 matrix_ATA.mtx -e 1 -etol 1.0e-8 -shift " + to_string(shifting) + " > maxEigenLisOutput.txt");
+    
+        // Passa la stringa come C-style string utilizzando c_str()
+        system(command.c_str());
+
+        // Leggi il valore dell'autovalore massimo
+        string maxEigenValue = readFile("maxEigenLisOutput.txt", "number of iterations");
+        cout << maxEigenValue << endl;
+    }
     
     
-    // string command = ("mpirun -n 4 ./lis-2.1.6/test/etest1 matrix_ATA.mtx -e 1 -etol 1.0e-8 -shift ").append(to_string(shifting)).append(" > maxEigenLisOutput.txt");
-    // system(command);
-    // string maxEigenValue = readFile("maxEigenLisOutput.txt", "eigenvalue");
-    // cout << maxEigenValue << endl;
+    
 
 
     //Here starts task 5
