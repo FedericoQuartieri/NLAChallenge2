@@ -15,6 +15,20 @@ using namespace std;
 
 #define IMG_PATH "256px-Albert_Einstein_Head.jpeg"
 
+int saveImage(int rows, int cols, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> image, string output_image_path){
+  Matrix<unsigned char, Dynamic, Dynamic, RowMajor> output_image(rows, cols);
+    output_image = image.unaryExpr([](double val) -> unsigned char {
+    return static_cast<unsigned char>(val);
+  });
+
+  // Save the image using stb_image_write
+  if (stbi_write_png(output_image_path.c_str(), cols, rows, 1, output_image.data(), cols) == 0) {
+    cerr << "Error: Could not save inputMatrixscale image" << endl;
+    return 1;
+  }
+  return 0;
+}
+
 void exportToMatrixMarket(const Eigen::MatrixXd& mat, const std::string& filename) {
     // Verifica che la matrice non sia vuota
     if (mat.rows() == 0 || mat.cols() == 0) {
@@ -135,6 +149,30 @@ string readFile(string filename, string word_to_find){
 }
 
 
+Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> createCheckerBoard(){
+    int dim = 200;
+    int squareDims = 25;
+    bool isBlack = true;
+    Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> A(dim, dim);
+    for (int i = 0; i < dim; i++) {
+        if (i % squareDims == 0){
+            isBlack = !isBlack;
+        }
+        for (int j = 0; j < dim; j++){
+            if (j % squareDims == 0){
+                isBlack = !isBlack;
+            }
+            if (isBlack){
+                A(i, j) = 0;
+            } else {
+                A(i, j) = 255;
+            }
+        }
+    }
+    return A;
+}
+
+
 
 
 
@@ -150,26 +188,37 @@ string readFile(string filename, string word_to_find){
 // cout << sqrt(abs(eigenvalues(1))) << endl;
 
 
-int main(){
-    int cols, rows, channels;    
-    Matrix<double, Dynamic, Dynamic, RowMajor> A = loadImage(&cols, &rows, &channels);
+int getCols(JacobiSVD<MatrixXd> svd, MatrixXd S, MatrixXd* C1, MatrixXd* D1, MatrixXd* C2, MatrixXd* D2, int k1, int k2){
+    Eigen::MatrixXd U = svd.matrixU();
+    Eigen::MatrixXd V = svd.matrixV();
 
-    //Here starts task 1
-    cout << "---------TASK1---------" << endl;
+    Eigen::MatrixXd SV = S * V.transpose();
+
+    *C1 = U.leftCols(k1);
+    *D1 = SV.leftCols(k1);
+
+    *C2 = U.leftCols(k2);
+    *D2 = SV.leftCols(k2);
+    return 0;
+}
+
+void task1(Matrix<double, Dynamic, Dynamic, RowMajor> A, Matrix<double, Dynamic, Dynamic, RowMajor> *ATA){
+    cout << "---------TASK1---------" << endl<< endl;
 
     MatrixXd traspose = A.transpose();
-    MatrixXd ATA = traspose*A;
-    cout << "The norm of A'A is: " << ATA.norm() << endl;
+    *ATA = traspose*A;
+    cout << "The norm of A'A is: " << ATA->norm() << endl;
+}
 
-    //Here starts task 2
-    cout << "---------TASK2---------" << endl;
+void task2(Matrix<double, Dynamic, Dynamic, RowMajor> A){
+    cout << "---------TASK2---------" << endl<< endl;
     
     int lambda1 = computeSingularValues(A);
     cout << "lambda1: " << lambda1 << endl;
-    
-    
-    //Here starts task 3
-    cout << "---------TASK3---------" << endl;
+}
+
+void task3(Matrix<double, Dynamic, Dynamic, RowMajor> ATA){
+    cout << "---------TASK3---------" << endl<< endl;
     
     Eigen::saveMarket(ATA,"matrix_ATA.mtx");
 
@@ -178,9 +227,11 @@ int main(){
     string maxEigenValue = readFile("maxEigenLisOutput.txt", "eigenvalue");
     cout << maxEigenValue << endl;
 
+}
 
+void task4(){
     //Here starts task 4
-    cout << "---------TASK4---------" << endl;
+    cout << "---------TASK4---------" << endl<< endl;
     for(int shifting=15000000;shifting<60000000;shifting+=2500000){//the shift is valuable(it accellerates the process) when it is >15000000 and <60000000
         string command = ("mpirun -n 4 ./lis-2.1.6/test/etest1 matrix_ATA.mtx -e 1 -etol 1.0e-8 -shift " + to_string(shifting) + " > maxEigenLisOutput.txt");
     
@@ -191,67 +242,110 @@ int main(){
         string maxEigenValue = readFile("maxEigenLisOutput.txt", "number of iterations");
         cout << maxEigenValue << endl;
     }
-    
-    
-    
+}
 
-
-    //Here starts task 5
-    cout << "---------TASK5---------" << endl;
-
-    JacobiSVD<MatrixXd> svd(A, ComputeThinU | ComputeThinV);
+void task5(Matrix<double, Dynamic, Dynamic, RowMajor> A, JacobiSVD<MatrixXd>svd, MatrixXd *S){
+    cout << "---------TASK5---------" << endl<< endl;
     Eigen::VectorXd singularValues = svd.singularValues();
     int sizeS = singularValues.size();
-    MatrixXd S = MatrixXd::Zero(sizeS, sizeS);
+    *S = MatrixXd::Zero(sizeS, sizeS);
     for (int i = 0; i < sizeS; ++i) {
-        S(i, i) = singularValues(i);
+        (*S)(i, i) = singularValues(i);
     }
     cout << "Euclidian norm of S as vector:" << singularValues.norm() << endl;
-    cout << "Euclidian norm of S as matrix:" << S.norm() << endl;
+    cout << "Euclidian norm of S as matrix:" << (*S).norm() << endl;
 
     cout << "ANSWER: Real euclidian norm of S:" << singularValues(0) << endl;
 
-    
-    //Here starts task 6
-    cout << "---------TASK6---------" << endl;
+}
 
-    Eigen::MatrixXd U = svd.matrixU();
-    Eigen::MatrixXd V = svd.matrixV();
+void task6_7(JacobiSVD<MatrixXd>svd, MatrixXd S){
 
-    Eigen::MatrixXd C1 = U.leftCols(40);
-    Eigen::MatrixXd SV = S * V.transpose();
-    Eigen::MatrixXd D1 = SV.leftCols(40);
+    cout << "---------TASK6---------" << endl<< endl;
 
-    Eigen::MatrixXd C2 = U.leftCols(80);
-    Eigen::MatrixXd D2 = SV.leftCols(80);
+    Eigen::MatrixXd C1; Eigen::MatrixXd D1; Eigen::MatrixXd C2; Eigen::MatrixXd D2;
+    getCols(svd, S, &C1, &D1, &C2, &D2, 40, 80);
 
     cout << "Non-zero C1:" << C1.nonZeros() << endl;
     cout << "Non-zero D1:" << D1.nonZeros() << endl;
     cout << "Non-zero C2:" << C2.nonZeros() << endl;
     cout << "Non-zero D2:" << D2.nonZeros() << endl;
 
+    cout << "---------TASK7---------" << endl<< endl;
 
-    //Here starts task 7
-    cout << "---------TASK7---------" << endl;
+    MatrixXd CD1 = C1 * D1.transpose();
+    MatrixXd CD2 = C2 * D2.transpose();
 
+    saveImage(CD1.rows(), CD1.cols(), CD1, "CDTranspose_40.png");
+    saveImage(CD2.rows(), CD2.cols(), CD2, "CDTranspose_80.png");
+}
 
-
-
+void task8(int *dim, Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>* checkerBoard){
     //Here starts task 8
-    cout << "---------TASK8---------" << endl;
+    cout << "---------TASK8---------" << endl<< endl;
 
+    *dim = 200; 
+    *checkerBoard = createCheckerBoard();
+    saveImage(*dim, *dim,*checkerBoard,"scacchiera.png");
+    cout << "Norm of the checkerboard:" << checkerBoard->norm()<< endl;
+}
 
-
+void task9(int dim, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> *noised, Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> checkerBoard){
 
     //Here starts task 9
-    cout << "---------TASK9---------" << endl;
+    cout << "---------TASK9---------" << endl<< endl;
+    
 
+    Eigen::MatrixXd randomMatrix = Eigen::MatrixXd::Random(dim, dim);
+    randomMatrix = 50*randomMatrix;
+    // Fill the matrices with image data
+    for (int i = 0; i < dim; ++i) {
+        for (int j = 0; j < dim; ++j) {
+            (*noised)(i, j) = checkerBoard(i,j) + randomMatrix(i, j);
+            if ((*noised)(i,j) >= 255) (*noised)(i, j) = 255;
+            if ((*noised)(i,j) <= 0) (*noised)(i, j) = 0;
+        }
+    }
 
+    saveImage(dim, dim, *noised, "noised_task9.png");
+}
 
-
+void task10(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> noised){
 
     //Here starts task 10
     cout << "---------TASK10---------" << endl;
+
+    computeSingularValues(noised);
+}
+
+int main(){
+    int cols, rows, channels;    
+    Matrix<double, Dynamic, Dynamic, RowMajor> A = loadImage(&cols, &rows, &channels);
+    Matrix<double, Dynamic, Dynamic, RowMajor> ATA = loadImage(&cols, &rows, &channels);
+    MatrixXd S;
+    int dim;
+    Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> checkerBoard;
+    
+
+
+
+    task1(A, &ATA);
+    task2(A);
+    task3(ATA);
+    task4();
+    JacobiSVD<MatrixXd>svd (A, ComputeThinU | ComputeThinV);
+    task5(A, svd, &S);
+    task6_7(svd, S);
+    task8(&dim, &checkerBoard);
+    Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> noised(dim, dim);
+    task9(dim, &noised, checkerBoard);
+    task10(noised);
+    //task11()
+
+
+
+
+
 
 
 
@@ -259,6 +353,10 @@ int main(){
     //Here starts task 11
     cout << "---------TASK11---------" << endl;
 
+    JacobiSVD<MatrixXd> svd2(noised, ComputeThinU | ComputeThinV);
+    Eigen::MatrixXd C1; Eigen::MatrixXd D1; Eigen::MatrixXd C2; Eigen::MatrixXd D2;
+    getCols(svd, S, &C1, &D1, &C2, &D2, 5, 10);
+    cout << C1.rows() << " " << C1.cols() << " ";
 
 
 
