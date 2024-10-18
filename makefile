@@ -24,5 +24,5 @@ rerun: recompile
 %.exe: %.cpp
 	@$(GCC) $(FLAGS) $< -o $@
 	
-%.cpp:
-	$(GCC) $(FLAGS) $@ -o $@.exe
+#%.cpp:
+#	$(GCC) $(FLAGS) $@ -o $@.exe

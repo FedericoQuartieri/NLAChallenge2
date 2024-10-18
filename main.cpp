@@ -192,7 +192,7 @@ int getCols(JacobiSVD<MatrixXd> svd, MatrixXd S, MatrixXd* C1, MatrixXd* D1, Mat
     Eigen::MatrixXd U = svd.matrixU();
     Eigen::MatrixXd V = svd.matrixV();
 
-    Eigen::MatrixXd SV = S * V.transpose();
+    Eigen::MatrixXd SV = S * (V.transpose());
 
     *C1 = U.leftCols(k1);
     *D1 = SV.leftCols(k1);
@@ -275,6 +275,13 @@ void task6_7(JacobiSVD<MatrixXd>svd, MatrixXd S){
 
     MatrixXd CD1 = C1 * D1.transpose();
     MatrixXd CD2 = C2 * D2.transpose();
+    CD1 = CD1.unaryExpr([](double el) -> double { 
+        if (el > 255) el = 255;
+        if (el < 0) el = 0;
+        return el;
+    });
+    
+
 
     saveImage(CD1.rows(), CD1.cols(), CD1, "CDTranspose_40.png");
     saveImage(CD2.rows(), CD2.cols(), CD2, "CDTranspose_80.png");
@@ -325,8 +332,6 @@ int main(){
     MatrixXd S;
     int dim;
     Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> checkerBoard;
-    
-
 
 
     task1(A, &ATA);
@@ -356,7 +361,7 @@ int main(){
     JacobiSVD<MatrixXd> svd2(noised, ComputeThinU | ComputeThinV);
     Eigen::MatrixXd C1; Eigen::MatrixXd D1; Eigen::MatrixXd C2; Eigen::MatrixXd D2;
     getCols(svd, S, &C1, &D1, &C2, &D2, 5, 10);
-    cout << C1.rows() << " " << C1.cols() << " ";
+    //cout << C1.rows() << " " << C1.cols() << " ";
 
 
 
