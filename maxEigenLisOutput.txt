@@ -20,12 +20,29 @@ eigensolver           : Power
 convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-08 * ||lx||_2
 matrix storage format : CSR
 shift                 : 5.750000e+07
+initial vector x      : all components set to 1
+precision             : double
+eigensolver           : Power
+convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-08 * ||lx||_2
+matrix storage format : CSR
+shift                 : 5.750000e+07
 eigensolver status    : normal end
 
 Power: mode number          = 0
 Power: eigenvalue           = 1.045818e+09
 Power: number of iterations = 7
-Power: elapsed time         = 9.908676e-04 sec.
+Power: elapsed time         = 9.829998e-04 sec.
+Power:   preconditioner     = 0.000000e+00 sec.
+Power:     matrix creation  = 0.000000e+00 sec.
+Power:   linear solver      = 0.000000e+00 sec.
+Power: relative residual    = 3.001988e-09
+
+eigensolver status    : normal end
+
+Power: mode number          = 0
+Power: eigenvalue           = 1.045818e+09
+Power: number of iterations = 7
+Power: elapsed time         = 1.028776e-03 sec.
 Power:   preconditioner     = 0.000000e+00 sec.
 Power:     matrix creation  = 0.000000e+00 sec.
 Power:   linear solver      = 0.000000e+00 sec.
@@ -42,7 +59,7 @@ eigensolver status    : normal end
 Power: mode number          = 0
 Power: eigenvalue           = 1.045818e+09
 Power: number of iterations = 7
-Power: elapsed time         = 9.698868e-04 sec.
+Power: elapsed time         = 1.070023e-03 sec.
 Power:   preconditioner     = 0.000000e+00 sec.
 Power:     matrix creation  = 0.000000e+00 sec.
 Power:   linear solver      = 0.000000e+00 sec.
@@ -59,24 +76,7 @@ eigensolver status    : normal end
 Power: mode number          = 0
 Power: eigenvalue           = 1.045818e+09
 Power: number of iterations = 7
-Power: elapsed time         = 9.849072e-04 sec.
-Power:   preconditioner     = 0.000000e+00 sec.
-Power:     matrix creation  = 0.000000e+00 sec.
-Power:   linear solver      = 0.000000e+00 sec.
-Power: relative residual    = 3.001988e-09
-
-initial vector x      : all components set to 1
-precision             : double
-eigensolver           : Power
-convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-08 * ||lx||_2
-matrix storage format : CSR
-shift                 : 5.750000e+07
-eigensolver status    : normal end
-
-Power: mode number          = 0
-Power: eigenvalue           = 1.045818e+09
-Power: number of iterations = 7
-Power: elapsed time         = 9.858608e-04 sec.
+Power: elapsed time         = 9.708405e-04 sec.
 Power:   preconditioner     = 0.000000e+00 sec.
 Power:     matrix creation  = 0.000000e+00 sec.
 Power:   linear solver      = 0.000000e+00 sec.

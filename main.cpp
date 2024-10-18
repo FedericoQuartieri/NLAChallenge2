@@ -188,18 +188,17 @@ Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> createCheckerBoa
 // cout << sqrt(abs(eigenvalues(1))) << endl;
 
 
-int getCols(JacobiSVD<MatrixXd> svd, MatrixXd S, MatrixXd* C1, MatrixXd* D1, MatrixXd* C2, MatrixXd* D2, int k1, int k2){
+void getCols(JacobiSVD<MatrixXd> svd, MatrixXd S, MatrixXd* C1, MatrixXd* D1, MatrixXd* C2, MatrixXd* D2, int k1, int k2){
     Eigen::MatrixXd U = svd.matrixU();
     Eigen::MatrixXd V = svd.matrixV();
 
-    Eigen::MatrixXd SV = S * (V.transpose());
+    Eigen::MatrixXd SV = (S * (V.transpose())).transpose();
 
     *C1 = U.leftCols(k1);
     *D1 = SV.leftCols(k1);
 
     *C2 = U.leftCols(k2);
     *D2 = SV.leftCols(k2);
-    return 0;
 }
 
 void task1(Matrix<double, Dynamic, Dynamic, RowMajor> A, Matrix<double, Dynamic, Dynamic, RowMajor> *ATA){
@@ -276,6 +275,11 @@ void task6_7(JacobiSVD<MatrixXd>svd, MatrixXd S){
     MatrixXd CD1 = C1 * D1.transpose();
     MatrixXd CD2 = C2 * D2.transpose();
     CD1 = CD1.unaryExpr([](double el) -> double { 
+        if (el > 255) el = 255;
+        if (el < 0) el = 0;
+        return el;
+    });
+    CD2 = CD2.unaryExpr([](double el) -> double { 
         if (el > 255) el = 255;
         if (el < 0) el = 0;
         return el;
