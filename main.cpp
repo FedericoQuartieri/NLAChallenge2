@@ -241,6 +241,8 @@ void task4(){
         string maxEigenValue = readFile("maxEigenLisOutput.txt", "number of iterations");
         cout << maxEigenValue << endl;
     }
+
+    cout << "the shift from 25000000 to 60000000 has the minimum iterations";
 }
 
 void task5(Matrix<double, Dynamic, Dynamic, RowMajor> A, JacobiSVD<MatrixXd>svd, MatrixXd *S){
@@ -287,8 +289,10 @@ void task6_7(JacobiSVD<MatrixXd>svd, MatrixXd S){
     
 
 
-    saveImage(CD1.rows(), CD1.cols(), CD1, "CDTranspose_40.png");
-    saveImage(CD2.rows(), CD2.cols(), CD2, "CDTranspose_80.png");
+    saveImage(CD1.rows(), CD1.cols(), CD1, "CDTranspose_40_task7.png");
+    saveImage(CD2.rows(), CD2.cols(), CD2, "CDTranspose_80_task7.png");
+
+    cout << "saved image" << endl;
 }
 
 void task8(int *dim, Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>* checkerBoard){
@@ -319,6 +323,8 @@ void task9(int dim, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen:
     }
 
     saveImage(dim, dim, *noised, "noised_task9.png");
+
+    cout << "saved image" << endl;
 }
 
 void task10(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> noised,MatrixXd *S){
@@ -354,6 +360,8 @@ void task11(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajo
         // Chiude il file una volta terminato
         myfile.close();
     }
+
+    cout << "saved file txt" << endl;
 }
 
 void task12(MatrixXd C1, MatrixXd D1, MatrixXd C2, MatrixXd D2){
@@ -362,6 +370,8 @@ void task12(MatrixXd C1, MatrixXd D1, MatrixXd C2, MatrixXd D2){
     Eigen::MatrixXd task12_2_matrix = C2 * D2.transpose();
     saveImage(task12_1_matrix.rows(), task12_1_matrix.cols(), task12_1_matrix, "task12_1.png");
     saveImage(task12_2_matrix.rows(), task12_2_matrix.cols(), task12_2_matrix, "task12_2.png");
+
+    cout << "saved image" << endl;
 }
 
 int main(){
@@ -388,40 +398,5 @@ int main(){
     task11(noised,S,&C1, &D1, &C2, &D2);
     task12(C1, D1, C2, D2);
 
-
-
-
-
-
-
-
-    //Here starts task 11
-    /*cout << "---------TASK11---------" << endl;
-    
-    JacobiSVD<MatrixXd> svd2(noised, ComputeThinU | ComputeThinV);
-    
-    getCols(svd2, S, &C1, &D1, &C2, &D2, 5, 10);
-    ofstream myfile("task11.txt");
-
-    // Controlla se il file è aperto correttamente
-    if (myfile.is_open()) {
-        myfile <<"Dimension of C and D for k=5:" << endl;
-        myfile << "C rows: " << C1.rows() << "; C cols: " << C1.cols() << std::endl;
-        myfile << "D rows: " << D1.rows() << "; D cols: " << D1.cols() << std::endl<<endl;
-        myfile << "Dimension of C and D for k=10:" << endl;
-        myfile << "C rows: " << C2.rows() << "; C cols: " << C2.cols() << std::endl;
-        myfile << "D rows: " << D2.rows() << "; D cols: " << D2.cols() << std::endl;
-
-        // Chiude il file una volta terminato
-        myfile.close();
-    }*/
-
-    //Here starts task 12
-    
-
-
-
-    //Here starts task 13
-    cout << "---------TASK13---------" << endl;
 }
 
