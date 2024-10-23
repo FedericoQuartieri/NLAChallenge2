@@ -231,8 +231,8 @@ void task3(Matrix<double, Dynamic, Dynamic, RowMajor> ATA){
 void task4(){
     //Here starts task 4
     cout << "---------TASK4---------" << endl<< endl;
-    for(int shifting=15000000;shifting<60000000;shifting+=2500000){//the shift is valuable(it accellerates the process) when it is >15000000 and <60000000
-        string command = ("mpirun -n 4 ./lis-2.1.6/test/etest1 matrix_ATA.mtx -e 1 -etol 1.0e-8 -shift " + to_string(shifting) + " > maxEigenLisOutput.txt");
+    for(int shifting=25000000;shifting<60000000;shifting+=1000000){//the shift is valuable(it accellerates the process) when it is >15000000 and <60000000
+        string command = ("mpirun -n 4 ./lis-2.1.6/test/etest1 matrix_ATA.mtx -e 1 -shift " + to_string(shifting) + " > maxEigenLisOutput.txt");
     
         // Passa la stringa come C-style string utilizzando c_str()
         system(command.c_str());
@@ -321,12 +321,47 @@ void task9(int dim, Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen:
     saveImage(dim, dim, *noised, "noised_task9.png");
 }
 
-void task10(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> noised){
+void task10(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> noised,MatrixXd *S){
 
     //Here starts task 10
     cout << "---------TASK10---------" << endl;
 
-    computeSingularValues(noised);
+    JacobiSVD<MatrixXd> svd(noised, ComputeThinU | ComputeThinV);
+    // Get the singular values
+    VectorXd singularValues = svd.singularValues();
+    int sizeS = singularValues.size();
+    *S = MatrixXd::Zero(sizeS, sizeS);
+    for (int i = 0; i < sizeS; ++i) {
+        (*S)(i, i) = singularValues(i);
+    }
+}
+void task11(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> noised,MatrixXd S, MatrixXd* C1, MatrixXd* D1, MatrixXd* C2, MatrixXd* D2){
+    cout << "---------TASK11---------" << endl<< endl;
+    JacobiSVD<MatrixXd> svd2(noised, ComputeThinU | ComputeThinV);
+    
+    getCols(svd2, S, C1, D1, C2, D2, 5, 10);
+    ofstream myfile("task11.txt");
+
+    // Controlla se il file è aperto correttamente
+    if (myfile.is_open()) {
+        myfile <<"Dimension of C and D for k=5:" << endl;
+        myfile << "C rows: " << C1->rows() << "; C cols: " << C1->cols() << std::endl;
+        myfile << "D rows: " << D1->rows() << "; D cols: " << D1->cols() << std::endl<<endl;
+        myfile << "Dimension of C and D for k=10:" << endl;
+        myfile << "C rows: " << C2->rows() << "; C cols: " << C2->cols() << std::endl;
+        myfile << "D rows: " << D2->rows() << "; D cols: " << D2->cols() << std::endl;
+
+        // Chiude il file una volta terminato
+        myfile.close();
+    }
+}
+
+void task12(MatrixXd C1, MatrixXd D1, MatrixXd C2, MatrixXd D2){
+    cout << "---------TASK12---------" << endl;
+    Eigen::MatrixXd task12_1_matrix = C1 * D1.transpose();
+    Eigen::MatrixXd task12_2_matrix = C2 * D2.transpose();
+    saveImage(task12_1_matrix.rows(), task12_1_matrix.cols(), task12_1_matrix, "task12_1.png");
+    saveImage(task12_2_matrix.rows(), task12_2_matrix.cols(), task12_2_matrix, "task12_2.png");
 }
 
 int main(){
@@ -348,9 +383,10 @@ int main(){
     task8(&dim, &checkerBoard);
     Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor> noised(dim, dim);
     task9(dim, &noised, checkerBoard);
-    task10(noised);
-    //task11()
-
+    task10(noised,&S);
+    Eigen::MatrixXd C1; Eigen::MatrixXd D1; Eigen::MatrixXd C2; Eigen::MatrixXd D2;
+    task11(noised,S,&C1, &D1, &C2, &D2);
+    task12(C1, D1, C2, D2);
 
 
 
@@ -360,18 +396,28 @@ int main(){
 
 
     //Here starts task 11
-    cout << "---------TASK11---------" << endl;
-
+    /*cout << "---------TASK11---------" << endl;
+    
     JacobiSVD<MatrixXd> svd2(noised, ComputeThinU | ComputeThinV);
-    Eigen::MatrixXd C1; Eigen::MatrixXd D1; Eigen::MatrixXd C2; Eigen::MatrixXd D2;
-    getCols(svd, S, &C1, &D1, &C2, &D2, 5, 10);
-    //cout << C1.rows() << " " << C1.cols() << " ";
+    
+    getCols(svd2, S, &C1, &D1, &C2, &D2, 5, 10);
+    ofstream myfile("task11.txt");
 
+    // Controlla se il file è aperto correttamente
+    if (myfile.is_open()) {
+        myfile <<"Dimension of C and D for k=5:" << endl;
+        myfile << "C rows: " << C1.rows() << "; C cols: " << C1.cols() << std::endl;
+        myfile << "D rows: " << D1.rows() << "; D cols: " << D1.cols() << std::endl<<endl;
+        myfile << "Dimension of C and D for k=10:" << endl;
+        myfile << "C rows: " << C2.rows() << "; C cols: " << C2.cols() << std::endl;
+        myfile << "D rows: " << D2.rows() << "; D cols: " << D2.cols() << std::endl;
 
+        // Chiude il file una volta terminato
+        myfile.close();
+    }*/
 
     //Here starts task 12
-    cout << "---------TASK12---------" << endl;
-
+    
 
 
 

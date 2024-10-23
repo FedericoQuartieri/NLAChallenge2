@@ -4,81 +4,81 @@ matrix size = 256 x 256 (65536 nonzero entries)
 
 
 number of processes = 1
+
+number of processes = 1
+matrix size = 256 x 256 (65536 nonzero entries)
+
 matrix size = 256 x 256 (65536 nonzero entries)
 
 
 number of processes = 1
 matrix size = 256 x 256 (65536 nonzero entries)
 
-
-number of processes = 1
-matrix size = 256 x 256 (65536 nonzero entries)
-
+initial vector x      : all components set to 1
 initial vector x      : all components set to 1
 precision             : double
 eigensolver           : Power
-convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-08 * ||lx||_2
+precision             : double
+eigensolver           : Power
+convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-12 * ||lx||_2
 matrix storage format : CSR
-shift                 : 5.750000e+07
+shift                 : 1.045818e+09
+convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-12 * ||lx||_2
+matrix storage format : CSR
+shift                 : 1.045818e+09
 initial vector x      : all components set to 1
 precision             : double
 eigensolver           : Power
-convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-08 * ||lx||_2
-matrix storage format : CSR
-shift                 : 5.750000e+07
-eigensolver status    : normal end
-
-Power: mode number          = 0
-Power: eigenvalue           = 1.045818e+09
-Power: number of iterations = 7
-Power: elapsed time         = 9.829998e-04 sec.
-Power:   preconditioner     = 0.000000e+00 sec.
-Power:     matrix creation  = 0.000000e+00 sec.
-Power:   linear solver      = 0.000000e+00 sec.
-Power: relative residual    = 3.001988e-09
-
-eigensolver status    : normal end
-
-Power: mode number          = 0
-Power: eigenvalue           = 1.045818e+09
-Power: number of iterations = 7
-Power: elapsed time         = 1.028776e-03 sec.
-Power:   preconditioner     = 0.000000e+00 sec.
-Power:     matrix creation  = 0.000000e+00 sec.
-Power:   linear solver      = 0.000000e+00 sec.
-Power: relative residual    = 3.001988e-09
-
 initial vector x      : all components set to 1
 precision             : double
 eigensolver           : Power
-convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-08 * ||lx||_2
+convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-12 * ||lx||_2
 matrix storage format : CSR
-shift                 : 5.750000e+07
-eigensolver status    : normal end
+shift                 : 1.045818e+09
+convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-12 * ||lx||_2
+matrix storage format : CSR
+shift                 : 1.045818e+09
+eigensolver status    : LIS_MAXITER(code=4)
 
 Power: mode number          = 0
-Power: eigenvalue           = 1.045818e+09
-Power: number of iterations = 7
-Power: elapsed time         = 1.070023e-03 sec.
+Power: eigenvalue           = 1.702758e+05
+Power: number of iterations = 1000
+Power: elapsed time         = 1.037440e-01 sec.
 Power:   preconditioner     = 0.000000e+00 sec.
 Power:     matrix creation  = 0.000000e+00 sec.
 Power:   linear solver      = 0.000000e+00 sec.
-Power: relative residual    = 3.001988e-09
+Power: relative residual    = 3.299364e-04
 
-initial vector x      : all components set to 1
-precision             : double
-eigensolver           : Power
-convergence condition : ||lx-(B^-1)Ax||_2 <= 1.0e-08 * ||lx||_2
-matrix storage format : CSR
-shift                 : 5.750000e+07
-eigensolver status    : normal end
+eigensolver status    : LIS_MAXITER(code=4)
 
 Power: mode number          = 0
-Power: eigenvalue           = 1.045818e+09
-Power: number of iterations = 7
-Power: elapsed time         = 9.708405e-04 sec.
+eigensolver status    : LIS_MAXITER(code=4)
+
+Power: mode number          = 0
+Power: eigenvalue           = 1.702758e+05
+Power: number of iterations = 1000
+Power: elapsed time         = 1.028361e-01 sec.
 Power:   preconditioner     = 0.000000e+00 sec.
 Power:     matrix creation  = 0.000000e+00 sec.
 Power:   linear solver      = 0.000000e+00 sec.
-Power: relative residual    = 3.001988e-09
+Power: relative residual    = 3.299364e-04
+
+Power: eigenvalue           = 1.702758e+05
+Power: number of iterations = 1000
+Power: elapsed time         = 1.043081e-01 sec.
+Power:   preconditioner     = 0.000000e+00 sec.
+Power:     matrix creation  = 0.000000e+00 sec.
+Power:   linear solver      = 0.000000e+00 sec.
+Power: relative residual    = 3.299364e-04
+
+eigensolver status    : LIS_MAXITER(code=4)
+
+Power: mode number          = 0
+Power: eigenvalue           = 1.702758e+05
+Power: number of iterations = 1000
+Power: elapsed time         = 1.027780e-01 sec.
+Power:   preconditioner     = 0.000000e+00 sec.
+Power:     matrix creation  = 0.000000e+00 sec.
+Power:   linear solver      = 0.000000e+00 sec.
+Power: relative residual    = 3.299364e-04
 

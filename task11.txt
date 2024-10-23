@@ -1,0 +1,7 @@
+Dimension of C and D for k=5:
+C rows: 200; C cols: 5
+D rows: 200; D cols: 5
+
+Dimension of C and D for k=10:
+C rows: 200; C cols: 10
+D rows: 200; D cols: 10
