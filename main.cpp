@@ -231,7 +231,7 @@ void task3(Matrix<double, Dynamic, Dynamic, RowMajor> ATA){
 void task4(){
     //Here starts task 4
     cout << "---------TASK4---------" << endl<< endl;
-    for(int shifting=25000000;shifting<60000000;shifting+=1000000){//the shift is valuable(it accellerates the process) when it is >15000000 and <60000000
+    for(int shifting=25000000;shifting<60000000;shifting+=10000000){//the shift is valuable(it accellerates the process) when it is >15000000 and <60000000
         string command = ("mpirun -n 4 ./lis-2.1.6/test/etest1 matrix_ATA.mtx -e 1 -shift " + to_string(shifting) + " > maxEigenLisOutput.txt");
     
         // Passa la stringa come C-style string utilizzando c_str()
@@ -242,7 +242,7 @@ void task4(){
         cout << maxEigenValue << endl;
     }
 
-    cout << "the shift from 25000000 to 60000000 has the minimum iterations";
+    cout << "the shift from 25000000 to 60000000 has the minimum iterations" << endl;
 }
 
 void task5(Matrix<double, Dynamic, Dynamic, RowMajor> A, JacobiSVD<MatrixXd>svd, MatrixXd *S){
@@ -335,6 +335,7 @@ void task10(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajo
     JacobiSVD<MatrixXd> svd(noised, ComputeThinU | ComputeThinV);
     // Get the singular values
     VectorXd singularValues = svd.singularValues();
+    cout << "the singular values are " << singularValues(0) << " and " << singularValues(1) << endl;
     int sizeS = singularValues.size();
     *S = MatrixXd::Zero(sizeS, sizeS);
     for (int i = 0; i < sizeS; ++i) {
@@ -366,10 +367,22 @@ void task11(Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajo
 
 void task12(MatrixXd C1, MatrixXd D1, MatrixXd C2, MatrixXd D2){
     cout << "---------TASK12---------" << endl;
-    Eigen::MatrixXd task12_1_matrix = C1 * D1.transpose();
-    Eigen::MatrixXd task12_2_matrix = C2 * D2.transpose();
-    saveImage(task12_1_matrix.rows(), task12_1_matrix.cols(), task12_1_matrix, "task12_1.png");
-    saveImage(task12_2_matrix.rows(), task12_2_matrix.cols(), task12_2_matrix, "task12_2.png");
+    Eigen::MatrixXd CD1 = C1 * D1.transpose();
+    Eigen::MatrixXd CD2 = C2 * D2.transpose();
+    
+    CD1 = CD1.unaryExpr([](double el) -> double { 
+        if (el > 255) el = 255;
+        if (el < 0) el = 0;
+        return el;
+    });
+    CD2 = CD2.unaryExpr([](double el) -> double { 
+        if (el > 255) el = 255;
+        if (el < 0) el = 0;
+        return el;
+    });
+    
+    saveImage(CD1.rows(), CD1.cols(), CD1, "CDTranspose_noised_5_task12.png");
+    saveImage(CD2.rows(), CD2.cols(), CD2, "CDTranspose_noised_10_task12.png");
 
     cout << "saved image" << endl;
 }
